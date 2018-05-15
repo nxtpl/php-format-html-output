@@ -10,6 +10,7 @@ class Format
 	private $in_content = FALSE;
 	private $inline_tag = FALSE;
 	private $input_index = 0;
+	private $indentation = "\t";
 	
 	public function HTML($input)
 	{
@@ -40,7 +41,7 @@ class Format
 					$this->parse_tag();
 				} elseif ( ! $this->in_content) {
 					if ( ! $this->inline_tag) {
-						$this->output .= "\n" . str_repeat("\t", $this->tabs);
+						$this->output .= "\n" . str_repeat($this->indentation, $this->tabs);
 					}
 					$this->in_content = TRUE;
 				}
@@ -86,19 +87,19 @@ class Format
 	private function parse_tag()
 	{
 		if ($this->is_comment()) {
-			$this->output .= "\n" . str_repeat("\t", $this->tabs);
+			$this->output .= "\n" . str_repeat($this->indentation, $this->tabs);
 			$this->in_comment = TRUE;
 		} elseif ($this->is_end_tag()) {
 			$this->in_tag = TRUE;
 			$this->inline_tag = FALSE;
 			$this->decrement_tabs();
 			if ( ! $this->is_inline_tag() AND ! $this->is_tag_empty()) {
-				$this->output .= "\n" . str_repeat("\t", $this->tabs);
+				$this->output .= "\n" . str_repeat($this->indentation, $this->tabs);
 			}
 		} else {
 			$this->in_tag = TRUE;
 			if ( ! $this->in_content AND ! $this->inline_tag) {
-				$this->output .= "\n" . str_repeat("\t", $this->tabs);
+				$this->output .= "\n" . str_repeat($this->indentation, $this->tabs);
 			}
 			if ( ! $this->is_closed_tag()) {
 				$this->tabs++;
